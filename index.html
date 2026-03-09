@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя ❤️</title>
+    <style>
+        /* Базовые настройки */
+        :root {
+            --glass-bg: rgba(20, 15, 35, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-highlight: rgba(255, 255, 255, 0.05);
+            --text-color: rgba(255, 255, 255, 0.95);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
+            background-color: #07050f;
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* --- ФОН: Liquid Aurora --- */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            background: #07050f;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.7;
+            animation: float 20s infinite ease-in-out alternate;
+            will-change: transform;
+        }
+
+        .blob-1 { width: 50vw; height: 50vw; background: #ff2a7a; top: -10%; left: -10%; animation-duration: 25s; }
+        .blob-2 { width: 60vw; height: 60vw; background: #4a00e0; bottom: -20%; right: -10%; animation-duration: 22s; animation-delay: -5s; }
+        .blob-3 { width: 45vw; height: 45vw; background: #00d2ff; top: 30%; left: 30%; animation-duration: 28s; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(10vw, -10vh) scale(1.1); }
+            66% { transform: translate(-10vw, 15vh) scale(0.9); }
+            100% { transform: translate(5vw, 5vh) scale(1.05); }
+        }
+
+        /* --- ВОЛШЕБНЫЕ СВЕТЛЯЧКИ (НОВОЕ) --- */
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.5);
+            animation: flyUp linear infinite;
+            bottom: -10px;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Текстура шума */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.04;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- КАРТОЧКА И 3D --- */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10vh 20px;
+            box-sizing: border-box;
+            perspective: 1200px; /* Для 3D эффекта */
+        }
+
+        .card-wrapper {
+            animation: breathe 8s ease-in-out infinite;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            padding: 50px 40px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), 
+                        inset 0 0 20px var(--glass-highlight);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out; /* Плавность для 3D */
+            will-change: transform;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-25deg);
+            animation: shine 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes shine { 100% { left: 200%; } }
+
+        /* --- ТЕКСТ --- */
+        p.reveal-text {
+            font-size: 1.18rem;
+            font-weight: 400;
+            letter-spacing: 0.4px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(35px) scale(0.97);
+            filter: blur(12px);
+            transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), 
+                        transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        p.reveal-text:last-child { margin-bottom: 0; }
+        p.reveal-text.visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+
+        /* Маленькое сердечко в тексте */
+        .inline-heart {
+            display: inline-block;
+            animation: simpleBeat 1.5s infinite;
+            color: #ff2a7a;
+            text-shadow: 0 0 15px rgba(255, 42, 122, 0.6);
+        }
+
+        @keyframes simpleBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+        }
+
+        /* --- ОГРОМНОЕ БЬЮЩЕЕСЯ СЕРДЦЕ (НОВОЕ) --- */
+        .big-heart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            width: 100%;
+            
+            /* Анимация появления */
+            opacity: 0;
+            transform: scale(0.5);
+            filter: blur(10px);
+            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .big-heart-container.visible {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0px);
+        }
+
+        .big-heart {
+            font-size: 6rem; /* Очень большое */
+            filter: drop-shadow(0 0 35px rgba(255, 42, 122, 0.8));
+            /* Реалистичный двойной удар (Тук-тук... Тук-тук...) */
+            animation: realHeartbeat 1.4s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+            will-change: transform;
+        }
+
+        @keyframes realHeartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.35); }  /* Первый сильный удар */
+            30% { transform: scale(1); }
+            45% { transform: scale(1.2); }   /* Второй слабый удар */
+            60% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            .glass-card { padding: 35px 25px; border-radius: 30px; }
+            p.reveal-text { font-size: 1.05rem; margin-bottom: 25px; }
+            .big-heart { font-size: 5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <!-- Контейнер для светлячков (генерируются в JS) -->
+    <div class="particles" id="particles"></div>
+
+    <div class="noise"></div>
+
+    <div class="container">
+        <div class="card-wrapper">
+            <div class="glass-card" id="tilt-card">
+                <p class="reveal-text">любимая,не знаю меня трусит как ебанутого я оч переживаю за все. переживаю за наши отношения я с тобой.я правда хочу быть всегда только с тобой,быть твоим любимым, просто чтобы ты меня любила а я тебя.</p>
+                
+                <p class="reveal-text">правда тебя люблю очень сильно, и переживаю за то, чтобы мы всегда были вместе,всегда проходили все трудные моменты,всегда друг друг доверяли и говорили вместе обо всех проблемах,которые у нас есть или будут.</p>
+                
+                <p class="reveal-text">если мы будем это обсуждать,мы будем понимать что не так. если будем понимать,то будем вместе и под друг друга настраиваться и что то менять. только так, моя любимая, мы сможем быть с тобой до конца наших дней.</p>
+                
+                <p class="reveal-text">правда хочу эту всю жизнь прожить с тобой,ты просто такая ну мой самый лучший идеал. ты моя просто частичка жизни, ну как частичка, ПРЯМ ЧАСТЬ вот. ты самое лучшее что есть у меня сейчас, самое лучшее что будешь в этой жизни.</p>
+                
+                <p class="reveal-text">я от тебя ничего не требую,когда мы съедемся даже заставлять делать ничего не хочу.хочу чтобы ты наслаждалась свободной жизнью, полную радости и всего такого. ну крч я хочу сделать тебя самой счастливой. ты этого заслуживаешь. я просто создан чтобы любить только тебя</p>
+                
+                <p class="reveal-text">правда люблю тебя очень сильно,хочу стараться для тебя, хочу целовать тебя, хочу с тобой в обнимочку такую спать мививипт. это просто моя мечта в жизни,которую я обязательно добьюсь. ты мое все, прям все что только можно. ты лучше кислорода,которым я дышу, ну крч я с тобой очень счастлив.</p>
+                
+                <p class="reveal-text">просто люби меня,верь мне и ничего не скрывай. я от тебя тоже ничего скрывать не буду. в моих глазах ты самая самая красивая девочка, и самое главное ты моя любимая. я щас это пишу и сам себе не верю что ты именно моя хвэф я не знаю что сказать просто ты лучшая самая.</p>
+                
+                <p class="reveal-text">очень рад что из 8 миллиардов человек попалась мне именно ты. просто представь 8 миллиард человек и из всех них ты светишься ярким теплым огоньком у меня в глазах и у меня с сердечке вот таком <span class="inline-heart">❤️</span>. ну это просто не знаю чодвзцжупттвлфжйу.</p>
+                
+                <p class="reveal-text">запомни мои слова, ты лучшая, ты любимая мной и ты всегда будешь такой. я тебя никогда не разлюблю, клянусь нашими отношениями, а как ты видишь я не хочу их терять по этому это навсегда. очень сильно хочу в будущем сделать тебе предложение,хочу чтобы ты была моей женой.</p>
+                
+                <p class="reveal-text">люблю тебя очень сильно,сладких снов спокойной ночи любименькая моя,желаю тебе только лучшего 🫶</p>
+                
+                <!-- То самое большое сердце -->
+                <div class="big-heart-container reveal-text">
+                    <div class="big-heart">❤️</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Умное появление текста и большого сердца
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1 
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 150); 
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            const textElements = document.querySelectorAll('.reveal-text');
+            textElements.forEach(el => observer.observe(el));
+
+            // 2. Генерация волшебных светлячков
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20; // Количество светлячков
+
+            for (let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.classList.add('particle');
+                // Случайная позиция по ширине
+                particle.style.left = Math.random() * 100 + 'vw';
+                // Случайная задержка начала анимации
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                // Случайная скорость (от 10 до 25 секунд)
+                particle.style.animationDuration = 10 + Math.random() * 15 + 's';
+                // Случайный размер
+                let size = Math.random() * 3 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particlesContainer.appendChild(particle);
+            }
+
+            // 3. Apple 3D-Параллакс (поворот карточки за мышкой)
+            const card = document.getElementById('tilt-card');
+            
+            // Работает только если есть мышь (не на телефонах)
+            if (window.matchMedia("(pointer: fine)").matches) {
+                document.addEventListener('mousemove', (e) => {
+                    // Вычисляем позицию мыши относительно центра экрана
+                    let xAxis = (window.innerWidth / 2 - e.pageX) / 45; // Чем больше число, тем слабее наклон
+                    let yAxis = (window.innerHeight / 2 - e.pageY) / 45;
+                    
+                    // Применяем вращение
+                    card.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+                });
+
+                // Возвращаем в исходное положение, если мышь ушла
+                document.addEventListener('mouseleave', () => {
+                    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
